@@ -1,0 +1,10 @@
+{
+  "name": "expo-worker",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "expo-server-sdk": "^3.7.0",
+    "dotenv": "^16.3.1"
+  }
+}

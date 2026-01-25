@@ -1,0 +1,10 @@
+{
+  "name": "fcm-worker",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "firebase-admin": "^11.11.0",
+    "dotenv": "^16.3.1"
+  }
+}
