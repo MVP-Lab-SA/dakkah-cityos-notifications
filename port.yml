@@ -1,0 +1,10 @@
+identifier: dakkah-cityos-notifications
+title: CityOS Notifications
+blueprint: system
+properties:
+  owner: team-platform
+  lifecycle: production
+  description: Core system for Notifications
+  repo_url: https://github.com/MVP-Lab-SA/dakkah-cityos-notifications
+relations:
+  platform: cityos-platform
