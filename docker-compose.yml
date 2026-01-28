@@ -1,17 +1,31 @@
 version: '3.8'
 
 services:
-  notifications:
+  expo-worker:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: cityos-notifications
+    container_name: cityos-notifications-expo
+    command: ["node", "packages/expo-worker/src/index.js"]
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-production}
-      CITYBUS_BROKERS: ${KAFKA_BROKERS:-citybus:9092}
-    ports:
-      - "3009:8000"
+      KAFKA_BROKERS: ${KAFKA_BROKERS:-citybus:9092}
+      EXPO_ACCESS_TOKEN: ${EXPO_ACCESS_TOKEN}
+    networks:
+      - dokploy-network
+  
+  fcm-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cityos-notifications-fcm
+    command: ["node", "packages/fcm-worker/src/index.js"]
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      KAFKA_BROKERS: ${KAFKA_BROKERS:-citybus:9092}
+      FCM_SERVICE_ACCOUNT_JSON: ${FCM_SERVICE_ACCOUNT_JSON}
     networks:
       - dokploy-network
 
