@@ -17,9 +17,13 @@ jobs:
       matrix:
         service:
           - name: notification-expo-worker
-            context: packages/expo-worker
+            context: .
+            dockerfile: Dockerfile
+            command: node packages/expo-worker/src/index.js
           - name: notification-fcm-worker
-            context: packages/fcm-worker
+            context: .
+            dockerfile: Dockerfile
+            command: node packages/fcm-worker/src/index.js
 
     steps:
       - name: Checkout repository
@@ -37,11 +41,16 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/mvp-lab-sa/dakkah-cityos-notifications/${{ matrix.service.name }}
-          tags: type=raw,value=latest
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
 
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.service.context }}
+          file: ${{ matrix.service.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+             NPM_TOKEN=${{ secrets.GITHUB_TOKEN }}
