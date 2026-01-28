@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  notifications:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cityos-notifications
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      CITYBUS_BROKERS: ${KAFKA_BROKERS:-citybus:9092}
+    ports:
+      - "3009:8000"
+    networks:
+      - dokploy-network
+
+networks:
+  dokploy-network:
+    external: true
