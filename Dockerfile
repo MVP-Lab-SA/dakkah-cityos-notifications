@@ -21,9 +21,9 @@ COPY packages/expo-worker/package.json ./packages/expo-worker/
 COPY packages/fcm-worker/package.json ./packages/fcm-worker/
 
 # Authentication for Private Registry
-ARG NPM_TOKEN
-ENV NPM_TOKEN=$NPM_TOKEN
-ENV GITHUB_TOKEN=$NPM_TOKEN
+ARG GITHUB_TOKEN
+ENV GITHUB_TOKEN=$GITHUB_TOKEN
+ENV GITHUB_TOKEN=$GITHUB_TOKEN
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
@@ -31,8 +31,8 @@ RUN pnpm install --frozen-lockfile
 # Rebuilder stage (if we add TS later, for now just copying)
 FROM base AS builder
 WORKDIR /app
-ARG NPM_TOKEN
-ENV NPM_TOKEN=$NPM_TOKEN
+ARG GITHUB_TOKEN
+ENV GITHUB_TOKEN=$GITHUB_TOKEN
 
 RUN npm install -g pnpm@10.27.0
 
