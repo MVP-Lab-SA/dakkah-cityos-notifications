@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Kafka } = require('kafkajs');
+const { CityOSCityBusClient } = require('@mvp-lab-sa/cityos-sdk');
 const admin = require('firebase-admin');
 
 const BROKERS = process.env.KAFKA_BROKERS ? process.env.KAFKA_BROKERS.split(',') : ['cityos-redpanda:29092'];
@@ -22,35 +22,31 @@ if (process.env.FCM_SERVICE_ACCOUNT_JSON) {
 }
 
 const fcm = admin.messaging();
-const kafka = new Kafka({ clientId: 'fcm-worker', brokers: BROKERS });
-const consumer = kafka.consumer({ groupId: GROUP_ID });
+const bus = new CityOSCityBusClient({ clientId: 'fcm-worker', brokers: BROKERS });
 
 const run = async () => {
-    await consumer.connect();
-    await consumer.subscribe({ topic: TOPIC, fromBeginning: false });
-
+    await bus.connect();
+    
     console.log(`🔥 FCM Worker Listening on ${TOPIC}...`);
 
-    await consumer.run({
-        eachMessage: async ({ message }) => {
-            const payload = JSON.parse(message.value.toString());
-            // Filter: Only process FCM provider
-            if (payload.provider !== 'FCM') return;
+    await bus.subscribe(GROUP_ID, TOPIC, async (message) => {
+        const payload = message.payload;
+        // Filter: Only process FCM provider
+        if (payload.provider !== 'FCM') return;
 
-            console.log(`📨 FCM Processing:`, payload.title);
-            const { tokens, title, body, data } = payload;
-            
-            try {
-                const response = await fcm.sendMulticast({
-                    notification: { title, body },
-                    data: data || {},
-                    tokens: tokens
-                });
-                console.log(`🚀 FCM Sent: ${response.successCount}/${tokens.length}`);
-            } catch(e) {
-                console.error("❌ FCM Error:", e);
-            }
-        },
+        console.log(`📨 FCM Processing:`, payload.title);
+        const { tokens, title, body, data } = payload;
+        
+        try {
+            const response = await fcm.sendMulticast({
+                notification: { title, body },
+                data: data || {},
+                tokens: tokens
+            });
+            console.log(`🚀 FCM Sent: ${response.successCount}/${tokens.length}`);
+        } catch(e) {
+            console.error("❌ FCM Error:", e);
+        }
     });
 };
 
