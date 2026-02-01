@@ -1,0 +1,14 @@
+name: Governance Checks
+on: [push, pull_request]
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+        continue-on-error: true # Warning only for now
+      - run: npm run lint
+        continue-on-error: true

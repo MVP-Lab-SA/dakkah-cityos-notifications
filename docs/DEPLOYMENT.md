@@ -40,7 +40,7 @@ The workers require these environment variables to be injected at runtime (usual
 The orchestration is managed in the **Infrastructure Repository** (`dakkah-cityos-infrastructure`).
 
 - **File**: `docker-compose.infra.yml`
-- **Network**: Must represent the same Docker network as Redpanda (`dokploy-network`).
+- **Network**: Must represent the same Docker network as Redpanda (`cityos-network`).
 - **Restart Policy**: `unless-stopped` is recommended.
 
 ## 🔍 Troubleshooting

@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   expo-worker:
@@ -13,8 +13,8 @@ services:
       KAFKA_BROKERS: ${KAFKA_BROKERS:-citybus:9092}
       EXPO_ACCESS_TOKEN: ${EXPO_ACCESS_TOKEN}
     networks:
-      - dokploy-network
-  
+      - cityos-network
+
   fcm-worker:
     build:
       context: .
@@ -27,8 +27,8 @@ services:
       KAFKA_BROKERS: ${KAFKA_BROKERS:-citybus:9092}
       FCM_SERVICE_ACCOUNT_JSON: ${FCM_SERVICE_ACCOUNT_JSON}
     networks:
-      - dokploy-network
+      - cityos-network
 
 networks:
-  dokploy-network:
+  cityos-network:
     external: true
